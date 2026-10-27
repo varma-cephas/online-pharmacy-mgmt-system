@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwanda National Digital Pharmacy & Patient Portal</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#593600",
+                        "error": "#ba1a1a",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed": "#6ffbbe",
+                        "surface": "#faf8ff",
+                        "surface-tint": "#1e667f",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-surface": "#131b2e",
+                        "on-primary-fixed": "#001f2a",
+                        "secondary-container": "#6cf8bb",
+                        "primary-fixed-dim": "#90cfec",
+                        "surface-container-high": "#e2e7ff",
+                        "on-error": "#ffffff",
+                        "secondary": "#006c49",
+                        "inverse-on-surface": "#eef0ff",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "outline-variant": "#bfc8cd",
+                        "tertiary-container": "#784b00",
+                        "on-secondary-container": "#00714d",
+                        "surface-container": "#eaedff",
+                        "on-background": "#131b2e",
+                        "primary-fixed": "#bde9ff",
+                        "surface-bright": "#faf8ff",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-highest": "#dae2fd",
+                        "inverse-primary": "#90cfec",
+                        "on-secondary": "#ffffff",
+                        "on-surface-variant": "#40484c",
+                        "outline": "#70787d",
+                        "inverse-surface": "#283044",
+                        "on-primary-fixed-variant": "#004d64",
+                        "surface-variant": "#dae2fd",
+                        "on-tertiary-container": "#ffbd6b",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#93d3ef",
+                        "primary": "#004357",
+                        "on-tertiary-fixed": "#2a1700",
+                        "background": "#faf8ff",
+                        "tertiary-fixed": "#ffddb8",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#0d5c75",
+                        "surface-dim": "#d2d9f4",
+                        "surface-container-low": "#f2f3ff",
+                        "on-secondary-fixed": "#002113"
+                    },
+                    fontFamily: {
+                        "body-md": ["Inter", "sans-serif"],
+                        "display-lg": ["Plus Jakarta Sans", "sans-serif"],
+                        "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+                        "headline-lg": ["Plus Jakarta Sans", "sans-serif"],
+                        "headline-sm": ["Plus Jakarta Sans", "sans-serif"],
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #eaedff; }
+        ::-webkit-scrollbar-thumb { background: #0d5c75; border-radius: 9999px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col">
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed top-20 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- ==================== VIEW 1: AUTHENTICATION SCREEN ==================== -->
+    <div id="view-auth" class="flex-1 flex items-center justify-center p-4 md:p-8">
+        <main class="w-full max-w-md bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-[0_10px_25px_-3px_rgba(13,92,117,0.1)] border border-surface-container">
+            <div class="flex flex-col w-full">
+                <!-- Brand Header -->
+                <div class="flex flex-col items-center text-center space-y-2 mb-6">
+                    <div class="w-14 h-14 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shadow-md mb-1">
+                        <span class="material-symbols-outlined text-3xl font-variation-settings: 'FILL' 1;">local_pharmacy</span>
+                    </div>
+                    <div class="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant">
+                        <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                        <span class="text-xs font-semibold uppercase tracking-wider">MoH & Rwanda FDA Verified</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-primary tracking-tight">Rwanda National Pharmacy</h1>
+                    <p class="text-xs text-on-surface-variant max-w-xs">
+                        National digital dispensary, electronic prescription tracking, and direct patient care portal.
+                    </p>
+                </div>
+
+                <!-- Role Selector Switcher -->
+                <div class="bg-surface-container p-1 rounded-xl flex items-center justify-between mb-4">
+                    <button class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all duration-200 bg-surface-container-lowest text-primary shadow-sm flex items-center justify-center gap-1" id="role-patient" onclick="selectRole('patient')" type="button">
+                        <span class="material-symbols-outlined text-sm">person</span>
+                        <span>Patient</span>
+                    </button>
+                    <button class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all duration-200 text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1" id="role-pharmacist" onclick="selectRole('pharmacist')" type="button">
+                        <span class="material-symbols-outlined text-sm">prescriptions</span>
+                        <span>Pharmacist</span>
+                    </button>
+                    <button class="flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all duration-200 text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1" id="role-admin" onclick="selectRole('admin')" type="button">
+                        <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                        <span>Branch Admin</span>
+                    </button>
+                </div>
+
+                <!-- Auth Mode Segmented Navigation -->
+                <div class="flex items-center justify-center space-x-1 bg-surface-container-low p-1 rounded-xl mb-6">
+                    <button class="flex-1 py-2 rounded-lg text-sm transition-all duration-200 bg-surface-container-lowest text-primary font-semibold shadow-sm" id="tab-signin" onclick="switchAuthMode('signin')" type="button">
+                        Sign In
+                    </button>
+                    <button class="flex-1 py-2 rounded-lg text-sm transition-all duration-200 text-on-surface-variant hover:text-on-surface font-semibold" id="tab-register" onclick="switchAuthMode('register')" type="button">
+                        Create Account
+                    </button>
+                </div>
+
+                <!-- SIGN IN PANEL -->
+                <div class="flex flex-col space-y-4" id="panel-signin">
+                    <div class="flex flex-col space-y-1.5">
+                        <label class="text-xs font-semibold text-on-surface flex items-center justify-between" for="signin-identity">
+                            <span id="signin-label-text">Phone or National ID (NID)</span>
+                            <span class="text-xs text-secondary flex items-center gap-0.5">
+                                <span class="material-symbols-outlined text-xs">verified_user</span> Rwanda ID
+                            </span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">badge</span>
+                            <input class="w-full pl-10 pr-3 py-3 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="signin-identity" placeholder="+250 788 000 000 or 1 199..." type="text" value="+250 788 412 890">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold text-on-surface" for="signin-pass">Password</label>
+                            <a class="text-xs text-primary hover:underline" href="#" onclick="showToast('Password reset link sent via SMS to your registered phone.', 'info')">Forgot password?</a>
+                        </div>
+                        <div class="relative flex items-center">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">lock</span>
+                            <input class="w-full pl-10 pr-10 py-3 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="signin-pass" placeholder="••••••••••••" type="password" value="secret123">
+                            <button class="absolute right-3 text-on-surface-variant hover:text-on-surface flex items-center" onclick="togglePass('signin-pass', this)" type="button">
+                                <span class="material-symbols-outlined text-lg">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 pt-1">
+                        <input checked class="w-4 h-4 rounded text-primary focus:ring-primary/25 accent-primary" id="remember" type="checkbox">
+                        <label class="text-xs text-on-surface select-none cursor-pointer" for="remember">
+                            Remember this trusted clinical device (30 days)
+                        </label>
+                    </div>
+
+                    <button class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-semibold text-sm shadow-md transition-all flex items-center justify-center space-x-2 mt-2 cursor-pointer" onclick="handleLogin()" type="button">
+                        <span>Sign In to Pharmacy</span>
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+
+                    <div class="relative flex py-2 items-center">
+                        <div class="flex-grow bg-surface-container-high h-px"></div>
+                        <span class="flex-shrink mx-3 text-xs uppercase text-outline font-medium">or authenticate with</span>
+                        <div class="flex-grow bg-surface-container-high h-px"></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="py-2.5 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer" onclick="showToast('Irembo ID Pass verified successfully.', 'success')" type="button">
+                            <span class="material-symbols-outlined text-primary text-base">fingerprint</span>
+                            <span>Irembo ID Pass</span>
+                        </button>
+                        <button class="py-2.5 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-all flex items-center justify-center space-x-1.5 shadow-sm cursor-pointer" onclick="showToast('Biometric Passkey authenticated.', 'success')" type="button">
+                            <span class="material-symbols-outlined text-secondary text-base">passkey</span>
+                            <span>Biometric Passkey</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CREATE ACCOUNT (REGISTRATION) PANEL -->
+                <div class="hidden flex flex-col space-y-4" id="panel-register">
+                    <div class="p-3 rounded-xl bg-surface-container-low flex items-start space-x-2 border border-outline-variant/30">
+                        <span class="material-symbols-outlined text-primary text-lg mt-0.5">verified</span>
+                        <p class="text-xs text-on-surface-variant">
+                            National identity validation links your verified e-prescriptions instantly to accredited Rwandan pharmacies.
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col space-y-1">
+                        <label class="text-xs font-semibold text-on-surface" for="reg-name">Full Legal Name</label>
+                        <div class="relative flex items-center">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">badge</span>
+                            <input class="w-full pl-10 pr-3 py-2.5 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="reg-name" placeholder="e.g. Sarah Jenkins" type="text" value="Sarah Jenkins">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="flex flex-col space-y-1">
+                            <label class="text-xs font-semibold text-on-surface" for="reg-phone">Rwandan Phone</label>
+                            <div class="relative flex items-center">
+                                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">call</span>
+                                <input class="w-full pl-10 pr-3 py-2.5 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="reg-phone" placeholder="+250 78..." type="tel" value="+250 788 412 890">
+                            </div>
+                            <span class="text-[11px] text-secondary">SMS/MoMo OTP check</span>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <label class="text-xs font-semibold text-on-surface" for="reg-nid">Indangamuntu (NID)</label>
+                            <div class="relative flex items-center">
+                                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">pin</span>
+                                <input class="w-full pl-10 pr-3 py-2.5 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="reg-nid" maxlength="16" placeholder="16 digits" type="text" value="1199880022334455">
+                            </div>
+                            <span class="text-[11px] text-on-surface-variant">16-digit verification</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col space-y-1">
+                        <label class="text-xs font-semibold text-on-surface flex justify-between items-center" for="reg-insurance">
+                            <span>Primary Health Insurance Scheme</span>
+                            <span class="text-xs text-primary font-medium">Direct Billing</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">health_and_safety</span>
+                            <select class="w-full pl-10 pr-8 py-2.5 bg-surface-container-lowest rounded-xl text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30 appearance-none cursor-pointer" id="reg-insurance">
+                                <option value="mutuelle">Mutuelle de Santé (CBHI)</option>
+                                <option value="rssb" selected>RSSB - RAMA</option>
+                                <option value="mmi">MMI (Military Medical Insurance)</option>
+                                <option value="private">Private / Out of Pocket</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 text-on-surface-variant text-lg pointer-events-none">expand_more</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="flex flex-col space-y-1">
+                            <label class="text-xs font-semibold text-on-surface" for="reg-pass">Password</label>
+                            <input class="w-full px-3 py-2.5 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="reg-pass" placeholder="Min 8 characters" type="password" value="secret123">
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <label class="text-xs font-semibold text-on-surface" for="reg-pass-confirm">Confirm</label>
+                            <input class="w-full px-3 py-2.5 bg-surface-container-lowest rounded-xl text-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm border border-outline-variant/30" id="reg-pass-confirm" placeholder="Repeat password" type="password" value="secret123">
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-2 pt-1">
+                        <input checked class="mt-1 w-4 h-4 rounded text-primary focus:ring-primary/20 accent-primary" id="terms" type="checkbox">
+                        <label class="text-xs text-on-surface-variant select-none cursor-pointer" for="terms">I agree to Pharmacy <a class="text-primary underline" href="#" onclick="showToast('Terms of Service and certified MoH privacy standards apply.', 'info')">Terms</a> & certified MoH patient privacy standard.</label>
+                    </div>
+
+                    <button class="w-full py-3.5 px-4 rounded-xl bg-secondary text-on-secondary hover:opacity-95 font-semibold text-sm shadow-md transition-all flex items-center justify-center space-x-2 cursor-pointer" onclick="handleRegister()" type="button">
+                        <span>Create Patient Account</span>
+                        <span class="material-symbols-outlined text-lg">check_circle</span>
+                    </button>
+                </div>
+
+                <!-- Footer Footprint -->
+                <div class="mt-6 pt-4 border-t border-outline-variant/20 bg-surface-container-low rounded-xl p-3 flex flex-col space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-1.5 text-on-surface-variant text-xs">
+                            <span class="material-symbols-outlined text-secondary text-base">shield</span>
+                            <span>256-bit Rwanda eHealth Encryption</span>
+                        </div>
+                        <span class="text-xs font-semibold text-outline">v2.4 LTS</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-on-surface font-medium">
+                        <div class="flex items-center space-x-1">
+                            <span class="material-symbols-outlined text-error text-base">emergency</span>
+                            <span>Emergency:</span>
+                            <span class="text-error font-bold">Toll-Free 114</span>
+                        </div>
+                        <div class="text-primary font-semibold flex items-center space-x-1">
+                            <span class="material-symbols-outlined text-sm">support_agent</span>
+                            <span>0788-PHARMA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==================== VIEW 2: MAIN DASHBOARD & APP (Hidden by default) ==================== -->
+    <div id="view-app" class="hidden flex-col min-h-screen">
+        <!-- Sticky Header Navigation -->
+        <header class="fixed top-0 left-0 right-0 z-40 bg-surface/90 backdrop-blur-xl border-b border-surface-container-high shadow-xs">
+            <div class="h-16 w-full max-w-[1440px] mx-auto px-4 md:px-8 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm">
+                        <span class="material-symbols-outlined text-[22px]">local_pharmacy</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-headline-sm text-base text-primary font-bold tracking-tight">Pharmacy</span>
+                        <span class="text-[10px] text-secondary font-semibold uppercase tracking-widest">Rwanda National</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex items-center gap-1 bg-surface-container-low p-1 rounded-xl">
+                    <button onclick="switchTab('catalog')" id="nav-btn-catalog" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-surface-container-highest text-primary shadow-xs flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px]">medical_services</span> Browse Medicines
+                    </button>
+                    <button onclick="switchTab('prescription')" id="nav-btn-prescription" class="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px]">prescriptions</span> Upload Prescription
+                    </button>
+                    <button onclick="switchTab('cart')" id="nav-btn-cart" class="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5 relative">
+                        <span class="material-symbols-outlined text-[18px]">shopping_cart</span> My Cart
+                        <span id="nav-cart-badge" class="absolute -top-1 -right-1 bg-secondary text-on-secondary text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">2</span>
+                    </button>
+                    <button onclick="switchTab('tracking')" id="nav-btn-tracking" class="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px]">local_shipping</span> Order Tracking
+                    </button>
+                    <button onclick="switchTab('account')" id="nav-btn-account" class="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-[18px]">person</span> Account & Insurance
+                    </button>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <div class="hidden sm:flex flex-col text-right">
+                        <span class="text-xs font-semibold text-on-surface" id="header-user-name">Sarah Jenkins</span>
+                        <span class="text-[10px] text-secondary">RSSB RAMA Verified</span>
+                    </div>
+                    <button onclick="handleLogout()" class="w-9 h-9 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors cursor-pointer" title="Log out">
+                        <span class="material-symbols-outlined text-[20px]">logout</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Bottom Nav Bar -->
+        <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest border-t border-surface-container py-2 px-4 flex justify-around shadow-lg">
+            <button onclick="switchTab('catalog')" class="flex flex-col items-center text-primary mobile-nav-btn" data-tab="catalog">
+                <span class="material-symbols-outlined">medical_services</span>
+                <span class="text-[10px]">Catalog</span>
+            </button>
+            <button onclick="switchTab('prescription')" class="flex flex-col items-center text-on-surface-variant mobile-nav-btn" data-tab="prescription">
+                <span class="material-symbols-outlined">prescriptions</span>
+                <span class="text-[10px]">Upload Rx</span>
+            </button>
+            <button onclick="switchTab('cart')" class="flex flex-col items-center text-on-surface-variant mobile-nav-btn relative" data-tab="cart">
+                <span class="material-symbols-outlined">shopping_cart</span>
+                <span class="text-[10px]">Cart</span>
+            </button>
+            <button onclick="switchTab('tracking')" class="flex flex-col items-center text-on-surface-variant mobile-nav-btn" data-tab="tracking">
+                <span class="material-symbols-outlined">local_shipping</span>
+                <span class="text-[10px]">Tracking</span>
+            </button>
+            <button onclick="switchTab('account')" class="flex flex-col items-center text-on-surface-variant mobile-nav-btn" data-tab="account">
+                <span class="material-symbols-outlined">person</span>
+                <span class="text-[10px]">Profile</span>
+            </button>
+        </div>
+
+        <!-- MAIN DYNAMIC CONTENT CONTAINER -->
+        <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 md:px-8 pt-20 pb-24 md:pb-12">
+            
+            <!-- TAB 1: CATALOG & SHOPPING DASHBOARD -->
+            <div id="tab-content-catalog" class="tab-pane flex flex-col gap-6 animate-fadeIn">
+                <!-- Greeting & Search Banner -->
+                <section class="w-full pt-4 pb-2">
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div class="space-y-1 max-w-xl">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/30 text-on-secondary-container text-xs font-semibold uppercase tracking-wider">
+                                <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                                Direct Patient Care & Cold-Chain Delivery
+                            </div>
+                            <h1 class="text-3xl font-bold text-on-surface tracking-tight">Good morning, Sarah</h1>
+                            <p class="text-base text-on-surface-variant">Find everyday healthcare essentials or reorder your regular maintenance medications in seconds.</p>
+                        </div>
+                        <!-- Quick Search Bar -->
+                        <div class="w-full md:w-96 relative">
+                            <div class="relative flex items-center">
+                                <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">search</span>
+                                <input id="catalog-search" oninput="filterCatalog()" class="w-full pl-11 pr-4 py-3 rounded-xl bg-surface-container-lowest text-on-surface placeholder:text-outline text-sm shadow-sm border border-outline-variant/30 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search symptoms, remedies, or medicines..." type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Filter Pills -->
+                    <div class="flex items-center gap-2 mt-6 overflow-x-auto pb-2 scrollbar-none">
+                        <button onclick="filterCategory('all', this)" class="category-btn px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold shadow-sm whitespace-nowrap transition-transform active:scale-95 flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px]">verified</span> All Items
+                        </button>
+                        <button onclick="filterCategory('pain', this)" class="category-btn px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-sm font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px] text-tertiary">healing</span> Headache & Pain
+                        </button>
+                        <button onclick="filterCategory('cold', this)" class="category-btn px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-sm font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px] text-primary">ac_unit</span> Cold & Flu
+                        </button>
+                        <button onclick="filterCategory('allergy', this)" class="category-btn px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-sm font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px] text-secondary">spa</span> Allergy
+                        </button>
+                        <button onclick="filterCategory('firstaid', this)" class="category-btn px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-sm font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1.5">
+                            <span class="material-symbols-outlined text-[18px] text-error">medical_services</span> First Aid
+                        </button>
+                    </div>
+                </section>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <!-- Left Core Stream: Upload Rx + Medicine Catalog -->
+                    <div class="lg:col-span-8 flex flex-col gap-6">
+                        <!-- Prescription Upload Banner Card -->
+                        <section class="p-6 rounded-2xl bg-gradient-to-br from-surface-container-low via-surface-container-lowest to-surface-container-low shadow-sm relative overflow-hidden border border-outline-variant/20">
+                            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                                <div class="space-y-1">
+                                    <span class="text-xs font-semibold uppercase tracking-wider text-secondary flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[16px]">maps_ugc</span> Official Rx Dispensary
+                                    </span>
+                                    <h2 class="text-xl font-bold text-on-surface">Have a Doctor's Prescription?</h2>
+                                    <p class="text-sm text-on-surface-variant max-w-md">Snap a clear photo or upload your clinic PDF. Our Rwandan pharmacists will review, verify dosages, and prepare your package.</p>
+                                </div>
+                                <div class="hidden md:flex flex-col items-end text-right">
+                                    <span class="text-xs text-secondary bg-surface-container-lowest px-3 py-1 rounded-full shadow-xs font-semibold flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">shield</span> Rwanda FDA Validated
+                                    </span>
+                                    <span class="text-xs text-on-surface-variant mt-1">Review time: &lt; 15 mins</span>
+                                </div>
+                            </div>
+                            <div class="relative group cursor-pointer bg-surface-container-lowest hover:bg-surface-container-low/60 rounded-xl p-6 transition-all text-center flex flex-col items-center justify-center gap-2 shadow-sm border-2 border-dashed border-outline-variant/40" id="drop-zone" onclick="document.getElementById('rx-file-input').click()">
+                                <input accept="image/*,.pdf" class="absolute inset-0 opacity-0 cursor-pointer" id="rx-file-input" type="file" onchange="handleFileSelect(event)">
+                                <div class="w-12 h-12 rounded-full bg-primary-fixed/40 flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+                                    <span class="material-symbols-outlined text-2xl">cloud_upload</span>
+                                </div>
+                                <p class="text-sm font-semibold text-on-surface pt-1">
+                                    <span class="text-primary font-bold">Tap to upload</span> or drag prescription file here
+                                </p>
+                                <p class="text-xs text-on-surface-variant">Supports camera photos, JPG, PNG, or clinic PDF up to 25MB</p>
+                            </div>
+                        </section>
+
+                        <!-- Medicine Grid -->
+                        <section class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 class="text-xl font-bold text-on-surface">Common Remedies & Relief</h2>
+                                    <p class="text-xs text-on-surface-variant">Clinically verified, over-the-counter essentials delivered safely across Kigali & provinces.</p>
+                                </div>
+                                <span class="text-xs text-on-surface-variant font-medium">5 Items Listed</span>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="medicine-grid">
+                                <!-- Card 1 -->
+                                <div class="medicine-card bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow border border-outline-variant/20" data-category="pain">
+                                    <div class="space-y-3">
+                                        <div class="h-40 w-full rounded-xl overflow-hidden bg-surface-container-low relative">
+                                            <img class="w-full h-full object-cover" src="https://placehold.co/400x300/0d5c75/ffffff?text=Acetaminophen+500mg" alt="Acetaminophen">
+                                            <span class="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-xs font-semibold text-on-surface shadow-xs">
+                                                Pain & Fever
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-base text-on-surface">Acetaminophen 500mg</h3>
+                                            <p class="text-xs text-on-surface-variant mt-1">Rapid relief caplets for tension headaches, body aches, & reduced fever. 24 count.</p>
+                                        </div>
+                                    </div>
+                                    <div class="pt-4 flex items-center justify-between mt-4 border-t border-surface-container">
+                                        <div>
+                                            <span class="text-lg font-bold text-primary">4,500 RWF</span>
+                                            <span class="text-[11px] text-secondary font-medium block">In Stock</span>
+                                        </div>
+                                        <button onclick="addItem('Acetaminophen 500mg', 4500, '4,500 RWF')" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container transition-colors flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
+                                            <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 2 -->
+                                <div class="medicine-card bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow border border-outline-variant/20" data-category="pain">
+                                    <div class="space-y-3">
+                                        <div class="h-40 w-full rounded-xl overflow-hidden bg-surface-container-low relative">
+                                            <img class="w-full h-full object-cover" src="https://placehold.co/400x300/006c49/ffffff?text=Ibuprofen+200mg" alt="Ibuprofen">
+                                            <span class="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-xs font-semibold text-on-surface shadow-xs">
+                                                Anti-Inflammatory
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-base text-on-surface">Ibuprofen 200mg</h3>
+                                            <p class="text-xs text-on-surface-variant mt-1">Targeted relief for joint inflammation, muscle soreness, and toothaches. 50 tablets.</p>
+                                        </div>
+                                    </div>
+                                    <div class="pt-4 flex items-center justify-between mt-4 border-t border-surface-container">
+                                        <div>
+                                            <span class="text-lg font-bold text-primary">5,200 RWF</span>
+                                            <span class="text-[11px] text-secondary font-medium block">In Stock</span>
+                                        </div>
+                                        <button onclick="addItem('Ibuprofen 200mg', 5200, '5,200 RWF')" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container transition-colors flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
+                                            <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 3 -->
+                                <div class="medicine-card bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow border border-outline-variant/20" data-category="allergy">
+                                    <div class="space-y-3">
+                                        <div class="h-40 w-full rounded-xl overflow-hidden bg-surface-container-low relative">
+                                            <img class="w-full h-full object-cover" src="https://placehold.co/400x300/593600/ffffff?text=Allergy+Relief+Cetirizine" alt="Allergy Relief">
+                                            <span class="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-xs font-semibold text-on-surface shadow-xs">
+                                                24-Hour Relief
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-base text-on-surface">Allergy Relief (Cetirizine)</h3>
+                                            <p class="text-xs text-on-surface-variant mt-1">All-day seasonal indoor & outdoor allergy relief without daytime grogginess. 30 mini-tablets.</p>
+                                        </div>
+                                    </div>
+                                    <div class="pt-4 flex items-center justify-between mt-4 border-t border-surface-container">
+                                        <div>
+                                            <span class="text-lg font-bold text-primary">8,000 RWF</span>
+                                            <span class="text-[11px] text-secondary font-medium block">In Stock</span>
+                                        </div>
+                                        <button onclick="addItem('Allergy Relief', 8000, '8,000 RWF')" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container transition-colors flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
+                                            <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 4 -->
+                                <div class="medicine-card bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow border border-outline-variant/20" data-category="pain">
+                                    <div class="space-y-3">
+                                        <div class="h-40 w-full rounded-xl overflow-hidden bg-surface-container-low relative">
+                                            <img class="w-full h-full object-cover" src="https://placehold.co/400x300/0d5c75/ffffff?text=Migraine+Relief" alt="Migraine Relief">
+                                            <span class="absolute top-2 left-2 px-2.5 py-0.5 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-xs font-semibold text-tertiary shadow-xs">
+                                                Extra Strength
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-base text-on-surface">Migraine Relief Complex</h3>
+                                            <p class="text-xs text-on-surface-variant mt-1">Triple-action pain defense formula targeting severe throbbing head pain and light sensitivity.</p>
+                                        </div>
+                                    </div>
+                                    <div class="pt-4 flex items-center justify-between mt-4 border-t border-surface-container">
+                                        <div>
+                                            <span class="text-lg font-bold text-primary">6,800 RWF</span>
+                                            <span class="text-[11px] text-secondary font-medium block">In Stock</span>
+                                        </div>
+                                        <button onclick="addItem('Migraine Relief', 6800, '6,800 RWF')" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container transition-colors flex items-center gap-1 active:scale-95 shadow-sm cursor-pointer">
+                                            <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Card 5 (Full width) -->
+                                <div class="medicine-card bg-surface-container-lowest rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:col-span-2 items-center justify-between gap-4 hover:shadow-md transition-shadow border border-outline-variant/20" data-category="cold">
+                                    <div class="flex items-center gap-4 w-full sm:w-auto">
+                                        <div class="w-24 h-24 rounded-xl overflow-hidden bg-surface-container-low flex-shrink-0">
+                                            <img class="w-full h-full object-cover" src="https://placehold.co/300x300/006c49/ffffff?text=Cough+Syrup" alt="Cough Syrup">
+                                        </div>
+                                        <div class="space-y-1">
+                                            <span class="px-2.5 py-0.5 rounded-full bg-secondary-container/40 text-xs font-semibold text-on-secondary-container">
+                                                Chest & Throat
+                                            </span>
+                                            <h3 class="font-bold text-base text-on-surface">Soothing Mucus & Cough Syrup</h3>
+                                            <p class="text-xs text-on-surface-variant max-w-md">Alcohol-free nighttime liquid with honey and elderberry extract. 200ml bottle with measuring cup.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex sm:flex-col items-center sm:items-end justify-between w-full sm:w-auto gap-2">
+                                        <span class="text-lg font-bold text-primary">5,800 RWF</span>
+                                        <button onclick="addItem('Cough Syrup', 5800, '5,800 RWF')" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container transition-colors flex items-center gap-1 active:scale-95 shadow-sm whitespace-nowrap cursor-pointer">
+                                            <span class="material-symbols-outlined text-[16px]">add_shopping_cart</span> Add to Cart
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <!-- Right Column: Patient Active Cart & Quick Checkout (4 cols) -->
+                    <div class="lg:col-span-4 sticky top-20 space-y-4">
+                        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm flex flex-col gap-4 border border-outline-variant/20">
+                            <div class="flex items-center justify-between pb-2 border-b border-surface-container">
+                                <div class="flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-primary text-[22px]">shopping_bag</span>
+                                    <h2 class="text-lg font-bold text-on-surface">Your Patient Cart</h2>
+                                </div>
+                                <span class="px-3 py-0.5 rounded-full bg-surface-container-high text-primary text-xs font-semibold" id="cart-count-badge">
+                                    2 items
+                                </span>
+                            </div>
+
+                            <!-- Cart Items List Container -->
+                            <div class="space-y-3 flex flex-col max-h-72 overflow-y-auto pr-1" id="cart-items-container">
+                                <!-- Initial item 1 -->
+                                <div class="cart-item flex items-center justify-between p-3 rounded-xl bg-surface-container-low/50" data-price="4500">
+                                    <div class="flex flex-col min-w-0 pr-2">
+                                        <span class="text-xs font-bold text-on-surface truncate">Acetaminophen 500mg</span>
+                                        <span class="text-[11px] text-on-surface-variant">Qty: 1 • Standard Pack</span>
+                                    </div>
+                                    <div class="text-right flex items-center gap-2">
+                                        <span class="text-xs font-bold text-on-surface">4,500 RWF</span>
+                                        <button onclick="removeItem(this, 4500)" class="text-outline hover:text-error transition-colors p-1 cursor-pointer" title="Remove item">
+                                            <span class="material-symbols-outlined text-[18px]">close</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Initial item 2 -->
+                                <div class="cart-item flex items-center justify-between p-3 rounded-xl bg-surface-container-low/50" data-price="8000">
+                                    <div class="flex flex-col min-w-0 pr-2">
+                                        <span class="text-xs font-bold text-on-surface truncate">Allergy Relief (Cetirizine)</span>
+                                        <span class="text-[11px] text-on-surface-variant">Qty: 1 • 30 Tablets</span>
+                                    </div>
+                                    <div class="text-right flex items-center gap-2">
+                                        <span class="text-xs font-bold text-on-surface">8,000 RWF</span>
+                                        <button onclick="removeItem(this, 8000)" class="text-outline hover:text-error transition-colors p-1 cursor-pointer" title="Remove item">
+                                            <span class="material-symbols-outlined text-[18px]">close</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-secondary-container/20 flex items-start gap-2 border border-secondary-container/30">
+                                <span class="material-symbols-outlined text-secondary text-[18px] mt-0.5">local_shipping</span>
+                                <p class="text-xs text-on-secondary-container">
+                                    Prescription verified items qualify for free tracked cold-chain doorstep delivery in Kigali.
+                                </p>
+                            </div>
+
+                            <div class="space-y-1.5 pt-2 border-t border-surface-container">
+                                <div class="flex justify-between text-xs text-on-surface-variant">
+                                    <span>Subtotal</span>
+                                    <span id="cart-subtotal" class="font-semibold">12,500 RWF</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-on-surface-variant">
+                                    <span>Estimated Shipping</span>
+                                    <span class="text-secondary font-semibold">Free</span>
+                                </div>
+                                <div class="flex justify-between text-base font-bold text-on-surface pt-1">
+                                    <span>Total</span>
+                                    <span class="text-primary" id="cart-total">12,500 RWF</span>
+                                </div>
+                            </div>
+
+                            <button onclick="goToCheckout()" class="w-full py-3.5 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-semibold text-sm shadow-md transition-all flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer" id="checkout-btn">
+                                <span class="material-symbols-outlined text-[18px]">lock</span>
+                                <span>Proceed to Secure Checkout →</span>
+                            </button>
+
+                            <div class="flex items-center justify-center gap-2 text-center pt-1 text-outline">
+                                <span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+                                <span class="text-[11px] text-on-surface-variant">256-bit SSL • HIPAA & Rwanda FDA Protected</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-container-low rounded-2xl p-4 shadow-xs flex items-center gap-4 border border-outline-variant/20">
+                            <div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs flex-shrink-0">
+                                <span class="material-symbols-outlined text-[20px]">chat</span>
+                            </div>
+                            <div>
+                                <h4 class="text-sm font-bold text-on-surface">Need pharmacist advice?</h4>
+                                <p class="text-xs text-on-surface-variant">Pharmacist on duty: Dr. E. Vance, PharmD</p>
+                                <a class="text-xs text-primary font-semibold hover:underline inline-flex items-center gap-1 mt-0.5" href="#" onclick="showToast('Connecting securely to Dr. E. Vance via secure eHealth chat...', 'info')">
+                                    Ask a quick question →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: UPLOAD PRESCRIPTION -->
+            <div id="tab-content-prescription" class="tab-pane hidden flex-col gap-6 animate-fadeIn">
+                <div class="max-w-3xl mx-auto w-full space-y-6">
+                    <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border border-outline-variant/20">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+                                <span class="material-symbols-outlined text-2xl">prescriptions</span>
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-primary">Upload & Verify Medical Prescription</h1>
+                                <p class="text-xs text-on-surface-variant">Official Ministry of Health electronic prescription clearing house.</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex flex-col space-y-1">
+                                <label class="text-xs font-semibold text-on-surface">Clinic / Hospital Source</label>
+                                <input type="text" class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm border border-outline-variant/30" placeholder="e.g. King Faisal Hospital Kigali or CHUK" value="King Faisal Hospital Kigali">
+                            </div>
+
+                            <div class="flex flex-col space-y-1">
+                                <label class="text-xs font-semibold text-on-surface">Attending Physician Name & License</label>
+                                <input type="text" class="w-full px-4 py-2.5 bg-surface-container-low rounded-xl text-sm border border-outline-variant/30" placeholder="e.g. Dr. Jean Bosco, Reg #77123" value="Dr. Jean Bosco, Reg #77123">
+                            </div>
+
+                            <div class="border-2 border-dashed border-outline-variant/40 rounded-2xl p-8 text-center bg-surface-container-low/50 hover:bg-surface-container-low transition-colors cursor-pointer" onclick="document.getElementById('full-rx-input').click()">
+                                <input type="file" id="full-rx-input" class="hidden" onchange="showToast('Prescription document successfully attached.', 'success')">
+                                <span class="material-symbols-outlined text-4xl text-primary mb-2">cloud_upload</span>
+                                <h3 class="font-bold text-sm text-on-surface">Click to upload prescription scan or PDF</h3>
+                                <p class="text-xs text-on-surface-variant mt-1">Accepted formats: JPG, PNG, PDF (Max 25MB)</p>
+                            </div>
+
+                            <button onclick="showToast('Prescription submitted to queue for pharmacist review.', 'success'); switchTab('tracking');" class="w-full py-3.5 rounded-xl bg-primary text-on-primary font-semibold text-sm shadow-md hover:bg-primary-container transition-all cursor-pointer">
+                                Submit Prescription for Pharmacist Verification
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: MY CART & CHECKOUT SCREEN -->
+            <div id="tab-content-cart" class="tab-pane hidden flex-col gap-6 animate-fadeIn">
+                <div class="max-w-5xl mx-auto w-full space-y-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-2xl font-bold text-on-surface">Secure Checkout & Payment</h1>
+                            <p class="text-xs text-on-surface-variant">Complete your order with Rwanda mobile money, cards, or health insurance.</p>
+                        </div>
+                        <button onclick="switchTab('catalog')" class="text-xs text-primary font-semibold hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span> Back to catalog
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        <!-- Left: Checkout Forms -->
+                        <div class="lg:col-span-7 flex flex-col gap-6">
+                            <!-- Delivery details -->
+                            <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 space-y-4">
+                                <h2 class="text-base font-bold text-primary flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs">1</span>
+                                    Delivery Address & Courier Speed
+                                </h2>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                                    <div class="p-3 bg-surface-container-low rounded-xl">
+                                        <span class="text-outline uppercase text-[10px] font-bold">Recipient</span>
+                                        <p class="font-bold text-on-surface mt-0.5">Sarah Jenkins (+250 788 412 890)</p>
+                                    </div>
+                                    <div class="p-3 bg-surface-container-low rounded-xl">
+                                        <span class="text-outline uppercase text-[10px] font-bold">Destination</span>
+                                        <p class="font-bold text-on-surface mt-0.5">KN 5 Rd, Gasabo, Kigali</p>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-primary/5 rounded-xl flex items-center justify-between text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="material-symbols-outlined text-secondary">mode_fan</span>
+                                        <div>
+                                            <span class="font-bold text-on-surface block">Express Cold-Chain (2°C - 8°C)</span>
+                                            <span class="text-on-surface-variant">Delivered in under 45 mins</span>
+                                        </div>
+                                    </div>
+                                    <span class="font-bold text-secondary">Free</span>
+                                </div>
+                            </div>
+
+                            <!-- Payment options -->
+                            <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/20 space-y-4">
+                                <h2 class="text-base font-bold text-primary flex items-center gap-2">
+                                    <span class="w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs">2</span>
+                                    Payment Method
+                                </h2>
+                                <div class="space-y-3">
+                                    <label class="p-4 rounded-xl bg-surface-container-low cursor-pointer flex flex-col gap-2 border border-outline-variant/30">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <input checked class="w-4 h-4 text-primary accent-primary" name="pay_method" type="radio">
+                                                <span class="font-bold text-sm text-on-surface">MTN Mobile Money (MoMo)</span>
+                                            </div>
+                                            <span class="text-xs text-secondary font-bold">Instant Prompt</span>
+                                        </div>
+                                        <div class="pl-7 flex items-center gap-2">
+                                            <span class="text-xs text-outline">+250</span>
+                                            <input type="tel" value="0788 412 890" class="w-full bg-surface-container-lowest px-3 py-2 rounded-lg text-xs font-bold border border-outline-variant/20">
+                                        </div>
+                                    </label>
+                                    <label class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low cursor-pointer flex items-center justify-between border border-outline-variant/20">
+                                        <div class="flex items-center gap-3">
+                                            <input class="w-4 h-4 text-primary accent-primary" name="pay_method" type="radio">
+                                            <span class="font-bold text-sm text-on-surface">Airtel Money Rwanda</span>
+                                        </div>
+                                        <span class="text-xs text-outline">USSD</span>
+                                    </label>
+                                    <label class="p-4 rounded-xl bg-surface-container-lowest hover:bg-surface-container-low cursor-pointer flex items-center justify-between border border-outline-variant/20">
+                                        <div class="flex items-center gap-3">
+                                            <input class="w-4 h-4 text-primary accent-primary" name="pay_method" type="radio">
+                                            <span class="font-bold text-sm text-on-surface">RSSB / RAMA Health Insurance Co-pay</span>
+                                        </div>
+                                        <span class="text-xs text-secondary font-bold">Pre-cleared</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Summary & Execution -->
+                        <div class="lg:col-span-5 bg-surface-container-lowest rounded-2xl p-6 shadow-md border border-outline-variant/20 space-y-4">
+                            <h3 class="font-bold text-base text-primary">Order Financial Ledger</h3>
+                            <div class="space-y-2 text-xs text-on-surface-variant border-y border-surface-container py-3">
+                                <div class="flex justify-between">
+                                    <span>Items Subtotal</span>
+                                    <span id="checkout-subtotal" class="font-bold text-on-surface">12,500 RWF</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Cold-Chain Transit</span>
+                                    <span class="text-secondary font-bold">Free</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Rwanda FDA Inspection</span>
+                                    <span class="text-secondary font-bold">Waived</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-baseline pt-2">
+                                <span class="font-bold text-sm text-on-surface">Total Amount Due</span>
+                                <span class="text-2xl font-bold text-primary" id="checkout-total">12,500 RWF</span>
+                            </div>
+                            <button onclick="completeOrder()" class="w-full py-4 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                <span class="material-symbols-outlined text-[20px]">lock</span>
+                                <span>Confirm & Pay via MoMo</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: ORDER TRACKING -->
+            <div id="tab-content-tracking" class="tab-pane hidden flex-col gap-6 animate-fadeIn">
+                <div class="max-w-3xl mx-auto w-full space-y-6">
+                    <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border border-outline-variant/20 space-y-6">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-container pb-4">
+                            <div>
+                                <span class="text-xs font-semibold text-secondary bg-secondary-container/30 px-3 py-1 rounded-full">Live Tracking Active</span>
+                                <h1 class="text-2xl font-bold text-on-surface mt-1">Order #RWF-994201</h1>
+                                <p class="text-xs text-on-surface-variant">Placed today at 2:42 PM • Kigali Central Dispatch</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-xs text-outline block">Estimated Arrival</span>
+                                <span class="text-base font-bold text-primary">In ~22 Minutes</span>
+                            </div>
+                        </div>
+
+                        <!-- Stepper Timeline -->
+                        <div class="space-y-6 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-secondary">
+                            <div class="relative flex items-start gap-4">
+                                <span class="absolute -left-6 w-5 h-5 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px] font-bold">✓</span>
+                                <div>
+                                    <h4 class="font-bold text-sm text-on-surface">Prescription Verified & Dispensed</h4>
+                                    <p class="text-xs text-on-surface-variant">Checked and sealed by Dr. E. Vance, PharmD at Kigali Central Pharmacy.</p>
+                                </div>
+                            </div>
+                            <div class="relative flex items-start gap-4">
+                                <span class="absolute -left-6 w-5 h-5 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px] font-bold">✓</span>
+                                <div>
+                                    <h4 class="font-bold text-sm text-on-surface">Cold-Chain Package Sealed</h4>
+                                    <p class="text-xs text-on-surface-variant">Temperature logged at 4.2°C inside insulated medical courier container.</p>
+                                </div>
+                            </div>
+                            <div class="relative flex items-start gap-4">
+                                <span class="absolute -left-6 w-5 h-5 rounded-full bg-primary animate-pulse text-on-primary flex items-center justify-center text-[10px] font-bold">➔</span>
+                                <div>
+                                    <h4 class="font-bold text-sm text-primary">Out for Delivery (Courier: Jean Paul, Moto #RWA 441B)</h4>
+                                    <p class="text-xs text-on-surface-variant">En route to KN 5 Rd, Gasabo District. GPS tracking active.</p>
+                                </div>
+                            </div>
+                            <div class="relative flex items-start gap-4 opacity-50">
+                                <span class="absolute -left-6 w-5 h-5 rounded-full bg-surface-container-high text-outline flex items-center justify-center text-[10px] font-bold">4</span>
+                                <div>
+                                    <h4 class="font-bold text-sm text-on-surface">Doorstep Handoff & NID Verification</h4>
+                                    <p class="text-xs text-on-surface-variant">Recipient signature / OTP validation.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-surface-container-low rounded-xl flex items-center justify-between text-xs">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-2xl">support_agent</span>
+                                <div>
+                                    <span class="font-bold text-on-surface block">Need to update delivery instructions?</span>
+                                    <span class="text-on-surface-variant">Contact dispatch or driver directly at +250 788 000 114</span>
+                                </div>
+                            </div>
+                            <button onclick="showToast('Calling driver Jean Paul...', 'info')" class="px-3 py-2 bg-primary text-on-primary font-semibold rounded-lg shadow-sm">
+                                Call Driver
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: ACCOUNT & INSURANCE -->
+            <div id="tab-content-account" class="tab-pane hidden flex-col gap-6 animate-fadeIn">
+                <div class="max-w-3xl mx-auto w-full space-y-6">
+                    <div class="bg-surface-container-lowest rounded-2xl p-6 md:p-8 shadow-sm border border-outline-variant/20 space-y-6">
+                        <div class="flex items-center gap-4 border-b border-surface-container pb-4">
+                            <div class="w-16 h-16 rounded-2xl bg-primary text-on-primary flex items-center justify-center text-2xl font-bold shadow-md">
+                                SJ
+                            </div>
+                            <div>
+                                <h1 class="text-2xl font-bold text-on-surface">Sarah Jenkins</h1>
+                                <p class="text-xs text-secondary font-semibold">Verified NIDA Indangamuntu: 1199880022334455</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="p-4 bg-surface-container-low rounded-xl space-y-1">
+                                <span class="text-xs uppercase text-outline font-bold">Primary Insurance Scheme</span>
+                                <p class="font-bold text-sm text-on-surface">RSSB - RAMA Medical Scheme</p>
+                                <span class="text-xs text-secondary font-medium">Policy #: RAMA-884920-RW</span>
+                            </div>
+                            <div class="p-4 bg-surface-container-low rounded-xl space-y-1">
+                                <span class="text-xs uppercase text-outline font-bold">Registered Phone</span>
+                                <p class="font-bold text-sm text-on-surface">+250 788 412 890</p>
+                                <span class="text-xs text-secondary font-medium">MoMo Wallet Linked</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <h3 class="font-bold text-base text-primary">Saved Prescriptions & Refill History</h3>
+                            <div class="p-4 bg-surface-container-low rounded-xl flex items-center justify-between text-xs">
+                                <div>
+                                    <span class="font-bold text-on-surface block">Chronic Maintenance Refill #4</span>
+                                    <span class="text-on-surface-variant">Dispensed by King Faisal Hospital • Valid until Dec 2026</span>
+                                </div>
+                                <button onclick="showToast('Refill request sent to pharmacist.', 'success')" class="px-3 py-1.5 bg-primary text-on-primary font-semibold rounded-lg">
+                                    Request Refill
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="w-full bg-surface-container-low py-8 border-t border-surface-container mt-auto">
+            <div class="w-full max-w-[1440px] mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-on-surface-variant">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary text-[20px]">verified</span>
+                    <span>© 2026 Rwanda National Digital Pharmacy Network. Licensed Pharmacy GPhC #9012488 & Rwanda FDA.</span>
+                </div>
+                <div class="flex items-center gap-6">
+                    <span class="uppercase tracking-wider font-semibold">HIPAA Compliant</span>
+                    <span class="uppercase tracking-wider font-semibold">24/7 Clinical Support</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let currentRole = 'patient';
+        let cartItems = [
+            { name: 'Acetaminophen 500mg', price: 4500, label: '4,500 RWF' },
+            { name: 'Allergy Relief (Cetirizine)', price: 8000, label: '8,000 RWF' }
+        ];
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-[#006c49]' : (type === 'error' ? 'bg-[#ba1a1a]' : 'bg-[#0d5c75]');
+            toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-lg text-xs font-semibold flex items-center gap-2 pointer-events-auto animate-fadeIn`;
+            toast.innerHTML = `<span class="material-symbols-outlined text-base">info</span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function switchAuthMode(mode) {
+            const tabSignIn = document.getElementById('tab-signin');
+            const tabRegister = document.getElementById('tab-register');
+            const panelSignIn = document.getElementById('panel-signin');
+            const panelRegister = document.getElementById('panel-register');
+
+            if (mode === 'signin') {
+                tabSignIn.className = 'flex-1 py-2 rounded-lg text-sm transition-all duration-200 bg-surface-container-lowest text-primary font-semibold shadow-sm';
+                tabRegister.className = 'flex-1 py-2 rounded-lg text-sm transition-all duration-200 text-on-surface-variant hover:text-on-surface font-semibold';
+                panelSignIn.classList.remove('hidden');
+                panelRegister.classList.add('hidden');
+            } else {
+                tabRegister.className = 'flex-1 py-2 rounded-lg text-sm transition-all duration-200 bg-surface-container-lowest text-primary font-semibold shadow-sm';
+                tabSignIn.className = 'flex-1 py-2 rounded-lg text-sm transition-all duration-200 text-on-surface-variant hover:text-on-surface font-semibold';
+                panelRegister.classList.remove('hidden');
+                panelSignIn.classList.add('hidden');
+            }
+        }
+
+        function selectRole(role) {
+            currentRole = role;
+            ['patient', 'pharmacist', 'admin'].forEach(r => {
+                const el = document.getElementById('role-' + r);
+                if (r === role) {
+                    el.className = 'flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all duration-200 bg-surface-container-lowest text-primary shadow-sm flex items-center justify-center gap-1';
+                } else {
+                    el.className = 'flex-1 py-2 text-center text-xs font-semibold rounded-lg transition-all duration-200 text-on-surface-variant hover:text-on-surface flex items-center justify-center gap-1';
+                }
+            });
+
+            const labelId = document.getElementById('signin-label-text');
+            if (role === 'pharmacist') {
+                labelId.textContent = 'Pharmacy License or Staff Email';
+            } else if (role === 'admin') {
+                labelId.textContent = 'Branch Admin ID or Corporate Email';
+            } else {
+                labelId.textContent = 'Phone or National ID (NID)';
+            }
+        }
+
+        function togglePass(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('.material-symbols-outlined');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = 'visibility_off';
+            } else {
+                input.type = 'password';
+                icon.textContent = 'visibility';
+            }
+        }
+
+        function handleLogin() {
+            showToast('Authentication successful. Loading patient portal...', 'success');
+            setTimeout(() => {
+                document.getElementById('view-auth').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('hidden');
+                document.getElementById('view-app').classList.add('flex');
+            }, 600);
+        }
+
+        function handleRegister() {
+            showToast('Patient account created & NIDA verified successfully!', 'success');
+            setTimeout(() => {
+                document.getElementById('view-auth').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('hidden');
+                document.getElementById('view-app').classList.add('flex');
+            }, 600);
+        }
+
+        function handleLogout() {
+            showToast('Logged out securely.', 'info');
+            setTimeout(() => {
+                document.getElementById('view-app').classList.add('hidden');
+                document.getElementById('view-app').classList.remove('flex');
+                document.getElementById('view-auth').classList.remove('hidden');
+            }, 500);
+        }
+
+        function switchTab(tabName) {
+            ['catalog', 'prescription', 'cart', 'tracking', 'account'].forEach(t => {
+                const pane = document.getElementById(`tab-content-${t}`);
+                if (pane) {
+                    if (t === tabName) {
+                        pane.classList.remove('hidden');
+                        pane.classList.add('flex');
+                    } else {
+                        pane.classList.add('hidden');
+                        pane.classList.remove('flex');
+                    }
+                }
+            });
+
+            // Update header nav active states
+            const navMapping = { catalog: 'nav-btn-catalog', prescription: 'nav-btn-prescription', cart: 'nav-btn-cart', tracking: 'nav-btn-tracking', account: 'nav-btn-account' };
+            Object.keys(navMapping).forEach(k => {
+                const btn = document.getElementById(navMapping[k]);
+                if (btn) {
+                    if (k === tabName) {
+                        btn.className = 'px-4 py-2 rounded-lg text-sm font-semibold transition-all bg-surface-container-highest text-primary shadow-xs flex items-center gap-1.5';
+                    } else {
+                        btn.className = 'px-4 py-2 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all flex items-center gap-1.5';
+                    }
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.className = 'category-btn px-4 py-2 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-sm font-semibold shadow-sm whitespace-nowrap transition-colors flex items-center gap-1.5';
+            });
+            btn.className = 'category-btn px-4 py-2 rounded-full bg-primary text-on-primary text-sm font-semibold shadow-sm whitespace-nowrap transition-transform active:scale-95 flex items-center gap-1.5';
+
+            document.querySelectorAll('.medicine-card').forEach(card => {
+                if (cat === 'all' || card.getAttribute('data-category') === cat) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterCatalog() {
+            const query = document.getElementById('catalog-search').value.toLowerCase();
+            document.querySelectorAll('.medicine-card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function addItem(name, price, priceLabel) {
+            cartItems.push({ name, price, label: priceLabel });
+            updateCartUI();
+            showToast(`${name} added to cart.`, 'success');
+        }
+
+        function removeItem(btn, price) {
+            const itemEl = btn.closest('.cart-item');
+            const index = Array.from(itemEl.parentNode.children).indexOf(itemEl);
+            if (index > -1) {
+                cartItems.splice(index, 1);
+            }
+            itemEl.remove();
+            updateCartUI();
+            showToast('Item removed from cart.', 'info');
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            container.innerHTML = '';
+            let total = 0;
+
+            cartItems.forEach((item, idx) => {
+                total += item.price;
+                const div = document.createElement('div');
+                div.className = 'cart-item flex items-center justify-between p-3 rounded-xl bg-surface-container-low/50';
+                div.innerHTML = `
+                    <div class="flex flex-col min-w-0 pr-2">
+                        <span class="text-xs font-bold text-on-surface truncate">${item.name}</span>
+                        <span class="text-[11px] text-on-surface-variant">Qty: 1 • Standard Pack</span>
+                    </div>
+                    <div class="text-right flex items-center gap-2">
+                        <span class="text-xs font-bold text-on-surface">${item.label}</span>
+                        <button onclick="removeItem(this, ${item.price})" class="text-outline hover:text-error transition-colors p-1 cursor-pointer" title="Remove item">
+                            <span class="material-symbols-outlined text-[18px]">close</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            const totalFormatted = total.toLocaleString() + ' RWF';
+            document.getElementById('cart-count-badge').textContent = `${cartItems.length} items`;
+            document.getElementById('cart-subtotal').textContent = totalFormatted;
+            document.getElementById('cart-total').textContent = totalFormatted;
+            document.getElementById('nav-cart-badge').textContent = cartItems.length;
+
+            const checkoutSubtotal = document.getElementById('checkout-subtotal');
+            const checkoutTotal = document.getElementById('checkout-total');
+            if (checkoutSubtotal) checkoutSubtotal.textContent = totalFormatted;
+            if (checkoutTotal) checkoutTotal.textContent = totalFormatted;
+        }
+
+        function goToCheckout() {
+            if (cartItems.length === 0) {
+                showToast('Your cart is empty. Please add items first.', 'error');
+                return;
+            }
+            switchTab('cart');
+        }
+
+        function completeOrder() {
+            showToast('MTN MoMo push prompt sent to +250 788 412 890. Enter PIN to confirm.', 'info');
+            setTimeout(() => {
+                showToast('Payment confirmed! Order successfully placed.', 'success');
+                cartItems = [];
+                updateCartUI();
+                switchTab('tracking');
+            }, 2500);
+        }
+
+        function handleFileSelect(event) {
+            if (event.target.files.length > 0) {
+                const fileName = event.target.files[0].name;
+                const dropZone = document.getElementById('drop-zone');
+                dropZone.innerHTML = `
+                    <div class="w-12 h-12 rounded-full bg-secondary-container/40 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined text-[24px]">verified</span>
+                    </div>
+                    <p class="text-sm font-bold text-on-surface">Prescription attached: <strong class="text-primary">${fileName}</strong></p>
+                    <p class="text-xs text-secondary font-medium">Ready for pharmacist verification upon checkout</p>
+                `;
+                showToast('Prescription file attached successfully.', 'success');
+            }
+        }
+    </script>
+</body>
+</html>
